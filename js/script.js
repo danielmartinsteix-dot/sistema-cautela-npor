@@ -317,6 +317,7 @@ function atualizarCompanhias() {
     campoCompanhiaCautela.innerHTML += `<option value="GERENCIAR_COMPANHIAS" style="font-weight:bold; color:blue;">+ Gerenciar Companhias</option>`;
 }
 
+// ATUALIZAÇÃO DO SELETOR DE COMPANHIAS
 function renderizarModalCompanhias() {
     const listaCompanhiasModal = document.getElementById("listaCompanhiasModal");
     if (!listaCompanhiasModal) return;
@@ -481,6 +482,7 @@ function precisaLogin() {
     return true;
 }
 
+// FECHAR MODAL
 function fecharMaterial() {
     modalMaterial.style.display = "none";
     limpar();
@@ -557,7 +559,7 @@ function corStatus(status) {
     return "";
 }
 
-// FILTRO GERAL DE PESQUISA
+// FILTRO GERAIS DE PESQUISA
 function getMateriaisVisiveis() {
     const termo = termoPesquisa.trim().toLowerCase();
     let filtrados = materiais;
@@ -1456,7 +1458,7 @@ function renderizar() {
         return;
     }
 
-    materialsVisiveis.forEach(m => {
+    materiaisVisiveis.forEach(m => {
         const quantidadeDisponivel = getQuantidadeDisponivel(m);
         
         // Correção de inconsistência visual em tempo real no card de exibição
