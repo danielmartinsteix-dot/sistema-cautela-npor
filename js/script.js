@@ -1239,7 +1239,7 @@ if (tabHistoricoManut && tabNovaManut && conteudoHistoricoManut && conteudoNovaM
         tabNovaManut.classList.add("active");
         tabHistoricoManut.classList.remove("active");
         conteudoHistoricoManut.style.display = "none";
-        conteudoNovaCaut.style.display = "block"; // Corrigido escopo de aba
+        conteudoNovaManut.style.display = "block";
 
         // Exibe salvar no formulário de preenchimento
         document.getElementById("salvarManutencao").style.display = "";
