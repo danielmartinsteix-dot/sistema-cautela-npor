@@ -5,9 +5,8 @@ const db = require("./firebase");
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
-// Função auxiliar para remover propriedades indefinidas e evitar erros no Firestore
 function higienizarDados(dados) {
     const limpo = {};
     for (const chave in dados) {
@@ -18,9 +17,33 @@ function higienizarDados(dados) {
     return limpo;
 }
 
-/*
-  🔵 BUSCAR TODOS OS MATERIAIS
-*/
+async function gerarProximoCodigo() {
+    const snapshot = await db.collection("materiais").get();
+
+    let maiorNumero = 0;
+
+    snapshot.forEach(doc => {
+        const dados = doc.data();
+        const codigo = dados.codigo || "";
+
+        const match = codigo.match(/MAT-(\d+)/);
+
+        if (match) {
+            const numero = Number(match[1]);
+            if (numero > maiorNumero) {
+                maiorNumero = numero;
+            }
+        }
+    });
+
+    const proximoNumero = maiorNumero + 1;
+    return `MAT-${String(proximoNumero).padStart(4, "0")}`;
+}
+
+app.get("/", (req, res) => {
+    res.send("API do Sistema de Cautela NPOR funcionando!");
+});
+
 app.get("/materiais", async (req, res) => {
     try {
         const snapshot = await db.collection("materiais").get();
@@ -40,22 +63,33 @@ app.get("/materiais", async (req, res) => {
     }
 });
 
-/*
-  🟢 CADASTRAR MATERIAL
-*/
 app.post("/materiais", async (req, res) => {
     try {
         const dadosMaterial = req.body;
-        
-        // Remove o ID temporário do cliente para adotar o ID definitivo gerado pelo Firestore
+
         delete dadosMaterial.id;
 
-        // Adiciona registro de data de criação
+        dadosMaterial.codigo = await gerarProximoCodigo();
         dadosMaterial.criadoEm = new Date();
+
+        if (dadosMaterial.quantidadeCautelada === undefined) {
+            dadosMaterial.quantidadeCautelada = 0;
+        }
+
+        if (!dadosMaterial.situacao) {
+            dadosMaterial.situacao = "Disponível";
+        }
+
+        if (!dadosMaterial.historicoCautelas) {
+            dadosMaterial.historicoCautelas = [];
+        }
+
+        if (dadosMaterial.cautela === undefined) {
+            dadosMaterial.cautela = null;
+        }
 
         const docRef = await db.collection("materiais").add(higienizarDados(dadosMaterial));
 
-        // Retorna o material completo com o ID gerado pelo Firestore
         res.json({
             id: docRef.id,
             ...dadosMaterial,
@@ -67,16 +101,11 @@ app.post("/materiais", async (req, res) => {
     }
 });
 
-/*
-  🟡 ATUALIZAR MATERIAL (PUT)
-  Necessário para salvar alterações, registrar cautelas, devoluções e manutenções
-*/
 app.put("/materiais/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const dadosMaterial = req.body;
 
-        // Remove o ID do corpo para evitar gravação redundante dentro do documento
         delete dadosMaterial.id;
 
         await db.collection("materiais").doc(id).set(higienizarDados(dadosMaterial), { merge: true });
@@ -84,7 +113,7 @@ app.put("/materiais/:id", async (req, res) => {
         res.json({
             id,
             ...dadosMaterial,
-            mensagem: "Material updated com sucesso"
+            mensagem: "Material atualizado com sucesso"
         });
     } catch (error) {
         console.error("Erro ao atualizar material:", error);
@@ -92,9 +121,6 @@ app.put("/materiais/:id", async (req, res) => {
     }
 });
 
-/*
-  🔴 EXCLUIR MATERIAL (DELETE)
-*/
 app.delete("/materiais/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,8 +137,8 @@ app.delete("/materiais/:id", async (req, res) => {
     }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:3000`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
