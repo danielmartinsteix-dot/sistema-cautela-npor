@@ -483,7 +483,7 @@ function abrirMaterial() {
     if (!usuarioLogado) return;
     editandoId = null;
     limpar();
-    codigo.value = "Código automático ao salvar";
+    codigo.value = "";
     tituloModalMaterial.textContent = "Novo Material";
     modalMaterial.style.display = "flex";
 }
@@ -493,7 +493,7 @@ btnSalvarMaterial.addEventListener("click", () => salvar(false));
 if (btnSalvarCriarOutro) btnSalvarCriarOutro.addEventListener("click", () => salvar(true));
 
 function limpar() {
-    name = ""; modelo.value = ""; localSelect.value = ""; quantidade.value = "1";
+    nome.value = ""; modelo.value = ""; localSelect.value = ""; quantidade.value = "1";
     situacao.value = "Disponível"; observacao.value = ""; categoriaSelect.value = ""; inputFotoMaterial.value = "";
 }
 
@@ -544,6 +544,7 @@ function corStatus(status) {
     return "";
 }
 
+// FILTRO GERAL DE PESQUISA
 function getMateriaisVisiveis() {
     const termo = termoPesquisa.trim().toLowerCase();
     let filtrados = materiais;
@@ -771,7 +772,7 @@ async function salvarCautela() {
         return;
     }
 
-    const quantityACautelar = Number(campoQuantidadeCautela.value) || 1;
+    const quantidadeACautelar = Number(campoQuantidadeCautela.value) || 1;
 
     const registroCautela = {
         nomeMilitar: campoNomeMilitarCautela.value.trim(),
@@ -780,7 +781,7 @@ async function salvarCautela() {
         cauteladoPor: campoQuemCautelou.value.trim(),
         local: null,
         observacao: campoObsCautela.value.trim(),
-        quantidade: quantityACautelar,
+        quantidade: quantidadeACautelar,
         descauteladoPor: null,
         dataDescautelado: null,
         observacaoDescautelado: null,
@@ -811,8 +812,8 @@ async function salvarCautela() {
                 return;
             }
             
-            if (quantityACautelar > quantidadeDisponivel) {
-                mostrarMensagem(`Não há ${quantityACautelar} unidades disponíveis de "${material.nome}". Disponível: ${quantidadeDisponivel}`, "erro");
+            if (quantidadeACautelar > quantidadeDisponivel) {
+                mostrarMensagem(`Não há ${quantidadeACautelar} unidades disponíveis de "${material.nome}". Disponível: ${quantidadeDisponivel}`, "erro");
                 return;
             }
         } else {
@@ -829,7 +830,7 @@ async function salvarCautela() {
         // Cópias para rollback em caso de falhas na conexão
         const backupEstado = JSON.parse(JSON.stringify(material));
 
-        const quantidadeASubtrair = modoCautelaEmMassa ? 1 : quantityACautelar;
+        const quantidadeASubtrair = modoCautelaEmMassa ? 1 : quantidadeACautelar;
         material.quantidadeCautelada = (material.quantidadeCautelada || 0) + quantidadeASubtrair;
         
         if (material.quantidadeCautelada >= material.quantidade) {
@@ -866,7 +867,7 @@ async function salvarCautela() {
             atualizarBotaoCautelaTopo();
             mostrarMensagem(`${materiaisParaCautelar.length} materiais cautelados e salvos no servidor`, "sucesso");
         } else {
-            mostrarMensagem(`${quantityACautelar} unidade(s) de "${materiaisParaCautelar[0].nome}" cautelada(s) e salva(s)`, "sucesso");
+            mostrarMensagem(`${quantidadeACautelar} unidade(s) de "${materiaisParaCautelar[0].nome}" cautelada(s) e salva(s)`, "sucesso");
         }
     } else {
         mostrarMensagem("A cautela falhou ao salvar no servidor. Operação revertida.", "erro");
@@ -991,9 +992,9 @@ async function salvarDescautela() {
     } else {
         // Devolução integral específica do militar
         registro.dataDescautelado = dataAtual;
-        registro.descauteladoPor: quemDescautelou.value.trim();
-        registro.observacaoDescautelado: obsDescautela.value.trim();
-        registro.quantidadeDescautelada: quantidadeARetornar;
+        registro.descauteladoPor = quemDescautelou.value.trim();
+        registro.observacaoDescautelado = obsDescautela.value.trim();
+        registro.quantidadeDescautelada = quantidadeARetornar;
         
         material.quantidadeCautelada = Math.max(0, (material.quantidadeCautelada || 0) - quantidadeARetornar);
     }
