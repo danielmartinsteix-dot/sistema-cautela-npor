@@ -133,9 +133,9 @@
 </div>
 
 <!-- =========================
-     MODAL CATEGORIAS
+     MODAL CATEGORIAS (SUB-MODAL COM Z-INDEX SUPERIOR)
 ========================= -->
-<div id="modalCategorias" class="modal">
+<div id="modalCategorias" class="modal" style="z-index: 1100;">
     <div class="modal-box">
         <h2>Gerenciar Categorias</h2>
         <div id="listaCategoriasModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
@@ -145,26 +145,14 @@
 </div>
 
 <!-- =========================
-     MODAL LOCAIS
+     MODAL LOCAIS (SUB-MODAL COM Z-INDEX SUPERIOR)
 ========================= -->
-<div id="modalLocais" class="modal">
+<div id="modalLocais" class="modal" style="z-index: 1100;">
     <div class="modal-box">
         <h2>Gerenciar Locais</h2>
         <div id="listaLocaisModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
         <button id="btnAdicionarLocal" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Novo Local</button>
         <button id="btnFecharLocais" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
-    </div>
-</div>
-
-<!-- =========================
-     MODAL COMPANHIAS
-========================= -->
-<div id="modalCompanhias" class="modal">
-    <div class="modal-box">
-        <h2>Gerenciar Companhias</h2>
-        <div id="listaCompanhiasModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
-        <button id="btnAdicionarCompanhia" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Nova Companhia</button>
-        <button id="btnFecharCompanhias" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
     </div>
 </div>
 
@@ -217,6 +205,18 @@
             <button id="salvarCautela">Salvar Cautela</button>
             <button id="fecharCautela">Cancelar</button>
         </div>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL COMPANHIAS (SUB-MODAL COM REORDENAÇÃO E Z-INDEX SUPERIOR)
+========================= -->
+<div id="modalCompanhias" class="modal" style="z-index: 1100;">
+    <div class="modal-box">
+        <h2>Gerenciar Companhias</h2>
+        <div id="listaCompanhiasModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
+        <button id="btnAdicionarCompanhia" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Nova Companhia</button>
+        <button id="btnFecharCompanhias" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
     </div>
 </div>
 
