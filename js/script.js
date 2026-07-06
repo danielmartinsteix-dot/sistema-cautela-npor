@@ -21,6 +21,9 @@ const USUARIO = "admin";
 const SENHA = "1234";
 const CHAVE_LOGIN = "sistemaCautelaUsuarioLogado";
 
+// Configuração de URL da API do Servidor
+const API_URL = "https://sistema-cautela-npor.onrender.com";
+
 // ELEMENTOS DO PAINEL DE CONTROLE (DASHBOARD)
 const dbCardTotal = document.getElementById("dbCardTotal");
 const dbCardDisponiveis = document.getElementById("dbCardDisponiveis");
@@ -138,7 +141,7 @@ const situacoes = ["Disponível", "Cautelado", "Em manutenção", "Inutilizado"]
 
 // FUNÇÕES DE COMUNICAÇÃO COM A API DO SERVIDOR
 async function sincronizarMaterialComServidor(material, metodo) {
-    const url = metodo === "POST" ? "http://localhost:3000/materiais" : `http://localhost:3000/materiais/${material.id}`;
+    const url = metodo === "POST" ? `${API_URL}/materiais` : `${API_URL}/materiais/${material.id}`;
     const res = await fetch(url, {
         method: metodo,
         headers: {
@@ -153,7 +156,7 @@ async function sincronizarMaterialComServidor(material, metodo) {
 }
 
 async function deletarMaterialDoServidor(id) {
-    const res = await fetch(`http://localhost:3000/materiais/${id}`, {
+    const res = await fetch(`${API_URL}/materiais/${id}`, {
         method: "DELETE"
     });
     if (!res.ok) {
@@ -177,7 +180,7 @@ async function carregarDados() {
     contadorId = Number(localStorage.getItem("contadorId")) || 1;
 
     try {
-        const res = await fetch("http://localhost:3000/materiais");
+        const res = await fetch(`${API_URL}/materiais`);
         if (res.ok) {
             materiais = await res.json();
             // Ajusta o contador de ID com segurança prevenindo NaN por conta de strings do Firestore
@@ -1123,9 +1126,9 @@ function abrirManutencao(id) {
     quemFezManutencao.value = material.ultimaManutencao?.responsavel || "";
     descricaoManutencao.value = material.ultimaManutencao?.descricao || "";
 
-    if (tabHistoricoManut && tabNovaManut && conteudoHistoricoManut && conteudoNovaManut) {
+    if (tabHistoricoManut && tabNovaCaut && conteudoHistoricoManut && conteudoNovaCaut) {
         tabHistoricoManut.classList.add("active");
-        tabNovaManut.classList.remove("active");
+        tabNovaCaut.classList.remove("active");
         conteudoHistoricoManut.style.display = "block";
         conteudoNovaCaut.style.display = "none";
         renderizarHistoricoManutencao(material);
@@ -1747,19 +1750,6 @@ if (campoQuantidadeCautela) {
         }
         if (Number(campoQuantidadeCautela.value) < 1) {
             campoQuantidadeCautela.value = 1;
-        }
-    });
-}
-
-if (campoQuantidadeDescautela) {
-    campoQuantidadeDescautela.addEventListener("input", () => {
-        const maxVal = Number(campoQuantidadeDescautela.max);
-        if (maxVal && Number(campoQuantidadeDescautela.value) > maxVal) {
-            mostrarMensagem("Apenas " + maxVal + " unidade(s) pendente(s) nesta cautela!", "erro");
-            campoQuantidadeDescautela.value = maxVal;
-        }
-        if (Number(campoQuantidadeDescautela.value) < 1) {
-            campoQuantidadeDescautela.value = 1;
         }
     });
 }
