@@ -193,9 +193,9 @@ async function buscarMateriais() {
 }
 
 async function carregarDados() {
-    categorias = JSON.parse(localStorage.getItem("categorias")) || ["Ferramenta", "Material de consumo", "Material de escritório", "Fardamento", "Equipamento", "Outros"];
-    listaLocais = JSON.parse(localStorage.getItem("locais")) || ["Subtenência", "1ª Cia", "2ª Cia", "SCP"];
-    companhias = JSON.parse(localStorage.getItem("companhias")) || ["1ª Cia", "2ª Cia", "SCP", "Cia Cmdo"];
+    categorias = JSON.parse(localStorage.getItem("categorias")) || ["Ferramenta", "Material de campo", "Material de escritório", "Fardamento", "Material de limpeza", "Outros"];
+    listaLocais = JSON.parse(localStorage.getItem("locais")) || ["Subtenência", "Pc CAP", "Sargenteação", "Alojamento Sgt", "Alojamento Cb/Sd", "Alojamento AL"];
+    companhias = JSON.parse(localStorage.getItem("companhias")) || ["1ª Cia", "2ª Cia", "3ª Cia", "4ª Cia", "CCap", "NPOR"];
     contadorId = Number(localStorage.getItem("contadorId")) || 1;
 
     try {
