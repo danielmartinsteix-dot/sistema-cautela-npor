@@ -482,8 +482,8 @@ function gerarCodigo() {
 function abrirMaterial() {
     if (!usuarioLogado) return;
     editandoId = null;
-    codigo.value = gerarCodigo();
     limpar();
+    codigo.value = "Código automático ao salvar";
     tituloModalMaterial.textContent = "Novo Material";
     modalMaterial.style.display = "flex";
 }
@@ -771,7 +771,7 @@ async function salvarCautela() {
         return;
     }
 
-    const quantidadeACautelar = Number(campoQuantidadeCautela.value) || 1;
+    const quantityACautelar = Number(campoQuantidadeCautela.value) || 1;
 
     const registroCautela = {
         nomeMilitar: campoNomeMilitarCautela.value.trim(),
@@ -780,7 +780,7 @@ async function salvarCautela() {
         cauteladoPor: campoQuemCautelou.value.trim(),
         local: null,
         observacao: campoObsCautela.value.trim(),
-        quantidade: quantidadeACautelar,
+        quantidade: quantityACautelar,
         descauteladoPor: null,
         dataDescautelado: null,
         observacaoDescautelado: null,
@@ -811,8 +811,8 @@ async function salvarCautela() {
                 return;
             }
             
-            if (quantidadeACautelar > quantidadeDisponivel) {
-                mostrarMensagem(`Não há ${quantidadeACautelar} unidades disponíveis de "${material.nome}". Disponível: ${quantidadeDisponivel}`, "erro");
+            if (quantityACautelar > quantidadeDisponivel) {
+                mostrarMensagem(`Não há ${quantityACautelar} unidades disponíveis de "${material.nome}". Disponível: ${quantidadeDisponivel}`, "erro");
                 return;
             }
         } else {
@@ -829,7 +829,7 @@ async function salvarCautela() {
         // Cópias para rollback em caso de falhas na conexão
         const backupEstado = JSON.parse(JSON.stringify(material));
 
-        const quantidadeASubtrair = modoCautelaEmMassa ? 1 : quantidadeACautelar;
+        const quantidadeASubtrair = modoCautelaEmMassa ? 1 : quantityACautelar;
         material.quantidadeCautelada = (material.quantidadeCautelada || 0) + quantidadeASubtrair;
         
         if (material.quantidadeCautelada >= material.quantidade) {
@@ -866,7 +866,7 @@ async function salvarCautela() {
             atualizarBotaoCautelaTopo();
             mostrarMensagem(`${materiaisParaCautelar.length} materiais cautelados e salvos no servidor`, "sucesso");
         } else {
-            mostrarMensagem(`${quantidadeACautelar} unidade(s) de "${materiaisParaCautelar[0].nome}" cautelada(s) e salva(s)`, "sucesso");
+            mostrarMensagem(`${quantityACautelar} unidade(s) de "${materiaisParaCautelar[0].nome}" cautelada(s) e salva(s)`, "sucesso");
         }
     } else {
         mostrarMensagem("A cautela falhou ao salvar no servidor. Operação revertida.", "erro");
@@ -983,7 +983,7 @@ async function salvarDescautela() {
             dataDescautelado: dataAtual,
             descauteladoPor: quemDescautelou.value.trim(),
             observacaoDescautelado: obsDescautela.value.trim(),
-            quantidadeDescautelada: quantityARetornar
+            quantidadeDescautelada: quantidadeARetornar
         };
         
         material.historicoCautelas.push(registroDevolvido);
@@ -991,14 +991,14 @@ async function salvarDescautela() {
     } else {
         // Devolução integral específica do militar
         registro.dataDescautelado = dataAtual;
-        registro.descauteladoPor = quemDescautelou.value.trim();
-        registro.observacaoDescautelado = obsDescautela.value.trim();
-        registro.quantidadeDescautelada = quantidadeARetornar;
+        registro.descauteladoPor: quemDescautelou.value.trim();
+        registro.observacaoDescautelado: obsDescautela.value.trim();
+        registro.quantidadeDescautelada: quantidadeARetornar;
         
         material.quantidadeCautelada = Math.max(0, (material.quantidadeCautelada || 0) - quantidadeARetornar);
     }
 
-    // Atualiza o rastreador de cautela principal para a próxima mais recente pendente
+    // Atribui ao rastreador de cautela principal a próxima mais recente pendente
     const cautelasAtivas = material.historicoCautelas ? material.historicoCautelas.filter(h => !h.dataDescautelado) : [];
     material.cautela = cautelasAtivas.length > 0 ? cautelasAtivas[cautelasAtivas.length - 1] : null;
 
