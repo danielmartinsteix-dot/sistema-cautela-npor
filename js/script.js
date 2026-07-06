@@ -493,7 +493,7 @@ btnSalvarMaterial.addEventListener("click", () => salvar(false));
 if (btnSalvarCriarOutro) btnSalvarCriarOutro.addEventListener("click", () => salvar(true));
 
 function limpar() {
-    nome.value = ""; modelo.value = ""; localSelect.value = ""; quantidade.value = "1";
+    name = ""; modelo.value = ""; localSelect.value = ""; quantidade.value = "1";
     situacao.value = "Disponível"; observacao.value = ""; categoriaSelect.value = ""; inputFotoMaterial.value = "";
 }
 
@@ -983,7 +983,7 @@ async function salvarDescautela() {
             dataDescautelado: dataAtual,
             descauteladoPor: quemDescautelou.value.trim(),
             observacaoDescautelado: obsDescautela.value.trim(),
-            quantidadeDescautelada: quantidadeARetornar
+            quantidadeDescautelada: quantityARetornar
         };
         
         material.historicoCautelas.push(registroDevolvido);
@@ -1560,8 +1560,6 @@ async function salvar(manterAberto = false) {
         materialIdParaCautela = editandoId;
     } else {
         materialModificado = {
-            id: contadorId,
-            codigo: gerarCodigo(),
             nome: nome.value,
             modelo: modelo.value,
             categoria,
@@ -1591,7 +1589,7 @@ async function salvar(manterAberto = false) {
 
         salvarDados();
         renderizar();
-        mostrarMensagem("Material saved and synchronized", "sucesso");
+        mostrarMensagem("Material salvo e sincronizado com o servidor", "sucesso");
     } catch (error) {
         console.warn("Servidor offline. Salvando material no LocalStorage como fallback resiliente:", error);
         
@@ -1599,6 +1597,9 @@ async function salvar(manterAberto = false) {
             const i = materiais.findIndex(x => String(x.id) === String(editandoId));
             materiais[i] = materialModificado;
         } else {
+            // Em fallback local sem servidor, o id e código são gerados para integridade do storage
+            materialModificado.id = contadorId;
+            materialModificado.codigo = gerarCodigo();
             materiais.push(materialModificado);
             contadorId++;
         }
