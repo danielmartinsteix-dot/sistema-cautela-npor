@@ -269,7 +269,9 @@ function renderizarModalLocais() {
 if (localSelect) {
     localSelect.addEventListener("change", (e) => {
         if (e.target.value === "GERENCIAR_LOCAIS") {
+            localSelect.blur(); // Fecha a lista nativa para evitar sobreposições
             if (!precisaLogin()) { localSelect.value = ""; return; }
+            modalMaterial.style.display = "none"; // Oculta modal do material temporariamente
             renderizarModalLocais();
             document.getElementById("modalLocais").style.display = "flex";
         }
@@ -289,6 +291,7 @@ if (btnFecharLocais) {
     btnFecharLocais.addEventListener("click", () => {
         document.getElementById("modalLocais").style.display = "none";
         localSelect.value = "";
+        modalMaterial.style.display = "flex"; // Restaura o modal do material
     });
 }
 
@@ -333,7 +336,9 @@ function renderizarModalCompanhias() {
 if (campoCompanhiaCautela) {
     campoCompanhiaCautela.addEventListener("change", (e) => {
         if (e.target.value === "GERENCIAR_COMPANHIAS") {
+            campoCompanhiaCautela.blur(); // Fecha a lista nativa para evitar sobreposições
             if (!precisaLogin()) { campoCompanhiaCautela.value = ""; return; }
+            document.getElementById("modalCautela").style.display = "none"; // Oculta modal da Cautela temporariamente
             renderizarModalCompanhias();
             document.getElementById("modalCompanhias").style.display = "flex";
         }
@@ -353,6 +358,7 @@ if (btnFecharCompanhias) {
     btnFecharCompanhias.addEventListener("click", () => {
         document.getElementById("modalCompanhias").style.display = "none";
         campoCompanhiaCautela.value = "";
+        document.getElementById("modalCautela").style.display = "flex"; // Restaura o modal de Cautela
     });
 }
 
@@ -391,13 +397,20 @@ function renderizarModalCategorias() {
 
 categoriaSelect.addEventListener("change", (e) => {
     if (e.target.value === "GERENCIAR") {
+        categoriaSelect.blur(); // Fecha a lista nativa para evitar sobreposições
         if (!precisaLogin()) { categoriaSelect.value = ""; return; }
+        modalMaterial.style.display = "none"; // Oculta modal do material temporariamente
         renderizarModalCategorias();
         modalCategorias.style.display = "flex";
     }
 });
 
-btnFecharCategorias.addEventListener("click", () => { modalCategorias.style.display = "none"; categoriaSelect.value = ""; });
+btnFecharCategorias.addEventListener("click", () => {
+    modalCategorias.style.display = "none";
+    categoriaSelect.value = "";
+    modalMaterial.style.display = "flex"; // Restaura o modal do material
+});
+
 btnAdicionarCategoria.addEventListener("click", () => {
     const nova = prompt("Nome da nova categoria:");
     if (nova && !categorias.includes(nova)) { categorias.push(nova); salvarDados(); atualizarCategorias(); renderizarModalCategorias(); }
@@ -1443,7 +1456,7 @@ function renderizar() {
         return;
     }
 
-    materiaisVisiveis.forEach(m => {
+    materialsVisiveis.forEach(m => {
         const quantidadeDisponivel = getQuantidadeDisponivel(m);
         
         // Correção de inconsistência visual em tempo real no card de exibição
