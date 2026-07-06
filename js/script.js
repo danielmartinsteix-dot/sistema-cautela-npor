@@ -17,8 +17,8 @@ let abrirCautelaAoSalvar = false;
 let materiaisSelecionados = new Set();
 let modoCautelaEmMassa = false;
 
-const USUARIO = "admin";
-const SENHA = "1234";
+const USUARIO = "ciapel@";
+const SENHA = "couraca";
 const CHAVE_LOGIN = "sistemaCautelaUsuarioLogado";
 
 // Configuração de URL da API do Servidor
@@ -434,7 +434,7 @@ window.excluirCat = (i) => {
 // LOGIN E UI
 function atualizarUI() {
     if (usuarioLogado) {
-        usuarioLogadoTexto.innerHTML = "👤 Daniel<br>Administrador";
+        usuarioLogadoTexto.innerHTML = "👤 Subtenência<br>Administrador";
         btnLogin.textContent = "Sair";
     } else {
         usuarioLogadoTexto.textContent = "Visitante";
