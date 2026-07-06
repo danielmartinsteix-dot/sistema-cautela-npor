@@ -173,6 +173,25 @@ function salvarDados() {
     localStorage.setItem("contadorId", contadorId.toString());
 }
 
+async function buscarMateriais() {
+    for (let tentativa = 1; tentativa <= 5; tentativa++) {
+        try {
+            const res = await fetch(`${API_URL}/materiais`);
+
+            if (res.ok) {
+                return await res.json();
+            }
+
+        } catch (e) {
+            console.log(`Tentativa ${tentativa}...`);
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+
+    throw new Error("Servidor indisponível.");
+}
+
 async function carregarDados() {
     categorias = JSON.parse(localStorage.getItem("categorias")) || ["Ferramenta", "Material de consumo", "Material de escritório", "Fardamento", "Equipamento", "Outros"];
     listaLocais = JSON.parse(localStorage.getItem("locais")) || ["Subtenência", "1ª Cia", "2ª Cia", "SCP"];
@@ -180,20 +199,15 @@ async function carregarDados() {
     contadorId = Number(localStorage.getItem("contadorId")) || 1;
 
     try {
-        const res = await fetch(`${API_URL}/materiais`);
-        if (res.ok) {
-            materiais = await res.json();
-            // Ajusta o contador de ID com segurança prevenindo NaN por conta de strings do Firestore
-            if (materiais.length > 0) {
-                const maxId = Math.max(...materiais.map(m => {
-                    const num = Number(m.id);
-                    return isNaN(num) ? 0 : num;
-                }));
-                contadorId = maxId + 1;
-                localStorage.setItem("contadorId", contadorId.toString());
-            }
-        } else {
-            materiais = JSON.parse(localStorage.getItem("materiais")) || [];
+        materiais = await buscarMateriais();
+        // Ajusta o contador de ID com segurança prevenindo NaN por conta de strings do Firestore
+        if (materiais.length > 0) {
+            const maxId = Math.max(...materiais.map(m => {
+                const num = Number(m.id);
+                return isNaN(num) ? 0 : num;
+            }));
+            contadorId = maxId + 1;
+            localStorage.setItem("contadorId", contadorId.toString());
         }
     } catch (error) {
         console.warn("Não foi possível conectar à API. Carregando dados locais do LocalStorage como fallback.", error);
@@ -1224,7 +1238,7 @@ if (tabHistoricoManut && tabNovaManut && conteudoHistoricoManut && conteudoNovaM
         tabNovaManut.classList.add("active");
         tabHistoricoManut.classList.remove("active");
         conteudoHistoricoManut.style.display = "none";
-        conteudoNovaManut.style.display = "block";
+        conteudoNovaCaut.style.display = "block"; // Corrigido escopo de aba
 
         // Exibe salvar no formulário de preenchimento
         document.getElementById("salvarManutencao").style.display = "";
@@ -1577,7 +1591,7 @@ async function salvar(manterAberto = false) {
 
         salvarDados();
         renderizar();
-        mostrarMensagem("Material salvo e sincronizado com o servidor", "sucesso");
+        mostrarMensagem("Material saved and synchronized", "sucesso");
     } catch (error) {
         console.warn("Servidor offline. Salvando material no LocalStorage como fallback resiliente:", error);
         
