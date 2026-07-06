@@ -1,0 +1,818 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f3f3f3;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    background: #20532d;
+    color: white;
+    padding: 15px;
+    position: relative;
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-center img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 5px auto;
+}
+
+.header-center h1 {
+    font-size: 20px;
+}
+
+.header-center p {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.header-right {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    text-align: right;
+}
+
+.header-right button {
+    margin-top: 5px;
+    background: #024612;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.header-right button:hover {
+    background: #024612;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 20px auto;
+    flex: 1;
+}
+
+/* MENSAGEM DO SISTEMA */
+
+#mensagemSistema {
+    margin-bottom: 10px;
+}
+
+.msg {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.sucesso {
+    background: #d4edda;
+    color: #155724;
+}
+
+.erro {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* =========================
+   TOPO
+========================= */
+
+.topo {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.topo input {
+    flex: 1;
+    padding: 10px;
+}
+
+.topo-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#novoMaterial,
+#btnCautelarMaterial {
+    font-size: 13px;
+    padding: 8px 12px;
+    background: #024612;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#btnCautelarMaterial {
+    background: #024612;
+}
+
+#novoMaterial:hover,
+#btnCautelarMaterial:hover {
+    opacity: 0.95;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.dashboard-card {
+    background: #f3f3ee;
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    border-left: 3px solid #7c8268;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Cartão do Dashboard ativado como filtro */
+.dashboard-card.ativo {
+    box-shadow: 0 0 0 3px #20532d;
+    transform: scale(1.02);
+}
+
+.dashboard-card strong {
+    display: block;
+    font-size: 24px;
+    margin-top: 6px;
+    color: #222;
+}
+
+.dashboard-label {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-card.verde { border-left-color: #28a745; }
+.dashboard-card.amarelo { border-left-color: #ffc107; }
+.dashboard-card.vermelho { border-left-color: #dc3545; }
+.dashboard-card.cinza { border-left-color: #6c757d; }
+
+/* =========================
+   LISTA / CARDS
+========================= */
+
+#listaMateriais {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+#cardsMateriais {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Largura mínima ajustada para caber os textos confortavelmente */
+    gap: 15px;
+    align-items: stretch; /* Garante que todos os cards em uma mesma fileira fiquem com a mesma altura */
+}
+
+.vazio {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #777;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* CARD */
+.card {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 12px 12px 14px;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+}
+
+/* TRATAMENTO DE TEXTOS E ENCOLHIMENTO SEM QUEBRAS */
+.card-info h3 {
+    margin: 6px 0;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card small {
+    color: gray;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.card-local,
+.card-categoria,
+.card-quantidade {
+    font-size: 12px;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-cautelado-por {
+    font-size: 11px;
+    color: #d17735;
+    font-weight: bold;
+    margin-top: 1px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Espaçador invisível estável para garantir alinhamento vertical absoluto */
+.card-cautelado-por.invisivel {
+    visibility: hidden;
+    margin-top: 1px;
+    line-height: 1.3;
+}
+
+.card-topo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.foto-wrapper {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+}
+
+.foto-material,
+.foto-preview {
+    width: 72px;
+    height: 72px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f6f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+}
+
+.foto-material img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-material.sem-foto {
+    font-size: 11px;
+    color: #777;
+    text-align: center;
+    line-height: 1.2;
+    cursor: default;
+}
+
+.foto-editar {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.foto-editar:hover {
+    background: rgba(0,0,0,0.75);
+}
+
+.modal-foto {
+    position: relative;
+    padding-top: 20px;
+}
+
+#editarFotoModal {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 16px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 11;
+}
+
+#editarFotoModal:hover {
+    background: rgba(0,0,0,0.75);
+}
+
+.card-info {
+    flex: 1;
+}
+
+/* ===================================================
+   ALINHAMENTO EM DUAS FILEIRAS SIMÉTRICAS DE BOTÕES
+   =================================================== */
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: auto; /* Força o bloco de ações a alinhar na base do card esticado */
+}
+
+.card-actions-primary {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+.card-actions-secondary {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 6px;
+    margin-top: 2px;
+}
+
+.card-actions button {
+    flex: 1; /* Distribui proporcionalmente o espaço horizontal para os botões da mesma linha */
+    height: 28px; /* Altura idêntica em todos os botões para garantir simetria vertical absoluta */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    background: #efefef;
+    color: #444;
+    padding: 0 4px;
+}
+
+.card-actions button:hover:not(:disabled) {
+    background: #dcdcdc;
+    color: #111;
+}
+
+.btn-action,
+.btn-icon,
+.btn-action.btn-cautela,
+.btn-action.btn-descautela,
+.btn-action.btn-manutencao,
+.btn-icon.btn-editar,
+.btn-icon.btn-excluir {
+    background: #efefef;
+    color: #444;
+}
+
+.btn-action:hover:not(:disabled),
+.btn-icon:hover:not(:disabled),
+.btn-action.btn-cautela:hover:not(:disabled),
+.btn-action.btn-descautela:hover:not(:disabled),
+.btn-action.btn-manutencao:hover:not(:disabled),
+.btn-icon.btn-editar:hover:not(:disabled),
+.btn-icon.btn-excluir:hover:not(:disabled) {
+    background: #dcdcdc;
+    color: #111;
+}
+
+/* STATUS */
+
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: white;
+    margin-top: auto; /* Alinha o status de forma idêntica no rodapé do bloco de texto */
+    text-align: center;
+    width: fit-content;
+}
+
+.status.disponivel {
+    background: #28a745;
+}
+
+.status.cautelado {
+    background: #ffc107;
+    color: #333;
+}
+
+.status.manutencao {
+    background: #dc3545;
+}
+
+.status.inutilizado {
+    background: #6c757d;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #d6d6d6 0%, #9a9a9a 100%);
+    border-radius: 0 4px 4px 0;
+}
+
+.card.disponivel::before {
+    background: linear-gradient(180deg, #d7edd6 0%, #b3d4b4 100%);
+}
+
+.card.cautelado::before {
+    background: linear-gradient(180deg, #fff7cc 0%, #ffe58f 100%);
+}
+
+.card.manutencao::before {
+    background: linear-gradient(180deg, #f3d6d8 0%, #d7b0b3 100%);
+}
+
+.card.inutilizado::before {
+    background: linear-gradient(180deg, #e5e5e5 0%, #bdbdbd 100%);
+}
+
+/* BOTÃO VER MAIS INTERATIVO */
+.btn-ver-mais {
+    transition: all 0.2s ease !important;
+}
+
+.btn-ver-mais:hover {
+    background: #e9ecef !important;
+    border-color: #ced4da !important;
+    color: #212529 !important;
+}
+
+/* ===================================================
+   MODAIS E ESTRUTURA GERAL DE BOTÕES INTERNOS
+   =================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    z-index: 10000;
+}
+
+.modal-box h2 {
+    margin-bottom: 10px;
+}
+
+.modal-box input,
+.modal-box textarea,
+.modal-box select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* PADRONIZAÇÃO DE TODOS OS BOTÕES DE UTILIDADES INTERNOS DOS MODAIS */
+.modal-box button,
+.modal-actions button {
+    flex: 1;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    color: #495057;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box button:hover,
+.modal-actions button:hover {
+    background: #e9ecef;
+    border-color: #ced4da;
+    color: #212529;
+}
+
+/* 1. BOTÕES DE AÇÃO PRINCIPAL - VERDE MILITAR */
+#entrar,
+#salvarMaterial,
+#salvarCriarOutro,
+#btnAdicionarCategoria,
+#btnAdicionarLocal,
+#btnAdicionarCompanhia,
+#salvarCautela,
+#salvarDescautela,
+#salvarManutencao {
+    background: #20532d;
+    color: white;
+    border-color: #20532d;
+}
+
+#entrar:hover,
+#salvarMaterial:hover,
+#salvarCriarOutro:hover,
+#btnAdicionarCategoria:hover,
+#btnAdicionarLocal:hover,
+#btnAdicionarCompanhia:hover,
+#salvarCautela:hover,
+#salvarDescautela:hover,
+#salvarManutencao:hover {
+    background: #183f20;
+    border-color: #183f20;
+    color: white;
+}
+
+/* 2. BOTÕES DE CANCELAMENTO OU SAÍDA - CINZA NEUTRO */
+#cancelarLogin,
+#fecharMaterial,
+#btnFecharCategorias,
+#btnFecharLocais,
+#btnFecharCompanhias,
+#fecharCautela,
+#fecharDescautela,
+#fecharHistorico,
+#fecharDetalhes,
+#fecharManutencao,
+#fecharFoto {
+    background: #e9ecef;
+    color: #495057;
+    border-color: #ced4da;
+}
+
+#cancelarLogin:hover,
+#fecharMaterial:hover,
+#btnFecharCategorias:hover,
+#btnFecharLocais:hover,
+#btnFecharCompanhias:hover,
+#fecharCautela:hover,
+#fecharDescautela:hover,
+#fecharHistorico:hover,
+#fecharDetalhes:hover,
+#fecharManutencao:hover,
+#fecharFoto:hover {
+    background: #dee2e6;
+    border-color: #adb5bd;
+    color: #212529;
+}
+
+/* AJUSTE ESPECÍFICO DE LARGURA PARA O FECHAMENTO DO MODAL DE DETALHES */
+#fecharDetalhes {
+    width: 100%;
+}
+
+/* ===================================================
+   TABS (ABAS) DE NAVEGAÇÃO NOS MODAIS
+   =================================================== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.tab {
+    flex: 1;
+    background: #f1f3f5;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    justify-content: center;
+}
+
+.tab:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+.tab.active {
+    background: #20532d !important; /* Destaque em Verde militar ativo */
+    color: white !important;
+    border-color: #20532d !important;
+}
+
+.modal-foto {
+    max-width: 560px;
+    text-align: center;
+}
+
+.modal-foto img {
+    width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.modal-foto button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #2f3b16;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-historico {
+    max-width: 520px;
+}
+
+.modal-detalhes {
+    max-width: 560px;
+}
+
+.conteudo-detalhes {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.detalhes-foto {
+    width: 110px;
+    height: 110px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+}
+
+.detalhes-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detalhes-foto.sem-foto {
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    padding: 8px;
+}
+
+.detalhes-manutencao {
+    background: #f7f7f7;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+.detalhes-manutencao h3 {
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+.lista-historico {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.item-historico {
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #fafafa;
+}
+
+.item-historico p {
+    margin: 3px 0;
+    font-size: 13px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #2E6F40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: auto;
+}
+
+footer div:first-child {
+    font-size: 13px;
+}
+
+footer div:last-child {
+    font-size: 11px;
+    margin-top: 2px;
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cautela NPOR</title>
+    <link class="styles" rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-right">
+        <div id="usuarioLogado">Visitante</div>
+        <button id="btnLoginHeader">Login</button>
+    </div>
+    <div class="header-center">
+        <img src="imagens/nporimage.png" alt="NPOR">
+        <h1>Sistema de Cautela NPOR</h1>
+        <p>Núcleo de Preparação de Oficiais da Reserva</p>
+    </div>
+</header>
+
+<main>
+    <div id="mensagemSistema"></div>
+
+    <!-- =========================
+         BARRA DE AÇÕES
+    ========================= -->
+    <section class="topo">
+        <input type="text" id="pesquisa" placeholder="Pesquisar material...">
+        <div class="topo-acoes">
+            <button id="novoMaterial">Novo Material</button>
+            <button id="btnCautelarMaterial" class="btn-secundario">Cautelar Material</button>
+            <button id="btnCautelarSelecionados" class="btn-secundario" style="display:none;">Cautelar Selecionados</button>
+        </div>
+    </section>
+
+    <!-- =========================
+         DASHBOARD (CLICÁVEL)
+    ========================= -->
+    <section class="dashboard" aria-label="Resumo do estoque">
+        <div class="dashboard-card" id="dbCardTotal">
+            <span class="dashboard-label">Total de materiais</span>
+            <strong id="totalMateriais">0</strong>
+        </div>
+        <div class="dashboard-card verde" id="dbCardDisponiveis">
+            <span class="dashboard-label">Disponíveis</span>
+            <strong id="materiaisDisponiveis">0</strong>
+        </div>
+        <div class="dashboard-card amarelo" id="dbCardCautelados">
+            <span class="dashboard-label">Cautelados</span>
+            <strong id="materiaisCautelados">0</strong>
+        </div>
+        <div class="dashboard-card vermelho" id="dbCardManutencao">
+            <span class="dashboard-label">Em manutenção</span>
+            <strong id="materiaisManutencao">0</strong>
+        </div>
+        <div class="dashboard-card cinza" id="dbCardInutilizados">
+            <span class="dashboard-label">Inutilizados</span>
+            <strong id="materiaisInutilizados">0</strong>
+        </div>
+    </section>
+
+    <!-- =========================
+         LISTA (ID ORIGINAL RESTAURADO PARA O CSS)
+    ========================= -->
+    <section id="listaMateriais">
+        <h2>
+            Materiais Cadastrados
+            (<span id="quantidadeMateriais">0</span>)
+        </h2>
+        <div id="cardsMateriais">
+            <p class="vazio">Nenhum material cadastrado.</p>
+        </div>
+    </section>
+</main>
+
+<!-- =========================
+     MODAL LOGIN
+========================= -->
+<div id="modalLogin" class="modal">
+    <div class="modal-box">
+        <h2>Login do Administrador</h2>
+        <input type="text" id="usuario" placeholder="Usuário">
+        <input type="password" id="senha" placeholder="Senha">
+        <div class="modal-actions">
+            <button id="entrar">Entrar</button>
+            <button id="cancelarLogin">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL MATERIAL
+========================= -->
+<div id="modalMaterial" class="modal">
+    <div class="modal-box">
+        <h2 id="tituloModalMaterial">Novo Material</h2>
+        <input type="text" id="codigoMaterial" placeholder="Código" readonly>
+        <input type="text" id="nomeMaterial" placeholder="Nome do material *">
+        <input type="text" id="modeloMaterial" placeholder="Modelo (opcional)">
+        
+        <select id="categoriaMaterial">
+            <option value="">Selecione a categoria</option>
+        </select>
+
+        <select id="localMaterial">
+            <option value="">Selecione o local de armazenamento *</option>
+        </select>
+
+        <input type="number" id="quantidadeMaterial" placeholder="Quantidade total *" min="1" value="1">
+
+        <select id="situacaoMaterial">
+            <option value="Disponível">Disponível *</option>
+            <option value="Cautelado">Cautelado</option>
+            <option value="Em manutenção">Em manutenção</option>
+            <option value="Inutilizado">Inutilizado</option>
+        </select>
+
+        <label for="fotoMaterial">Foto do material (opcional)</label>
+        <input type="file" id="fotoMaterial" accept="image/*">
+        <input type="file" id="fotoMaterialHidden" accept="image/*" style="display:none;">
+        <textarea id="observacaoMaterial" rows="4" placeholder="Observações (opcional)"></textarea>
+
+        <div class="modal-actions">
+            <button id="salvarMaterial">Salvar Material</button>
+            <button id="salvarCriarOutro">Salvar e Criar Outro</button>
+            <button id="fecharMaterial">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL CATEGORIAS
+========================= -->
+<div id="modalCategorias" class="modal">
+    <div class="modal-box">
+        <h2>Gerenciar Categorias</h2>
+        <div id="listaCategoriasModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
+        <button id="btnAdicionarCategoria" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Nova</button>
+        <button id="btnFecharCategorias" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL LOCAIS
+========================= -->
+<div id="modalLocais" class="modal">
+    <div class="modal-box">
+        <h2>Gerenciar Locais</h2>
+        <div id="listaLocaisModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
+        <button id="btnAdicionarLocal" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Novo Local</button>
+        <button id="btnFecharLocais" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL COMPANHIAS
+========================= -->
+<div id="modalCompanhias" class="modal">
+    <div class="modal-box">
+        <h2>Gerenciar Companhias</h2>
+        <div id="listaCompanhiasModal" style="margin: 15px 0; max-height: 200px; overflow-y: auto;"></div>
+        <button id="btnAdicionarCompanhia" style="width: 100%; padding: 8px; margin-bottom: 10px;">+ Adicionar Nova Companhia</button>
+        <button id="btnFecharCompanhias" style="width: 100%; padding: 8px; background: #ccc;">Fechar</button>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL CAUTELA (ABAS)
+========================= -->
+<div id="modalCautela" class="modal">
+    <div class="modal-box modal-historico">
+        <h2>Cautela</h2>
+
+        <div class="tabs" style="margin-bottom:10px;">
+            <button id="tabHistoricoCaut" class="tab active">Histórico de cautela</button>
+            <button id="tabNovaCaut" class="tab">Nova cautela</button>
+        </div>
+
+        <div id="conteudoHistoricoCaut" class="lista-historico" style="display:block; max-height:320px; overflow-y:auto; margin-bottom:10px;">
+            <!-- histórico de cautelas do material será preenchido via JS -->
+        </div>
+
+        <div id="conteudoNovaCaut" style="display:none;">
+            <div id="listaMateriaisSelecionados" style="display:none; margin-bottom:10px; font-size:13px; color:#333;"></div>
+            
+            <!-- Barra de pesquisa rápida acima do menu -->
+            <input type="text" id="pesquisaMaterialCautela" placeholder="🔍 Digite para pesquisar o material..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 8px;">
+            
+            <select id="materialCautelaSelect" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
+                <option value="">Selecione um material</option>
+            </select>
+
+            <input type="text" id="localCautela" placeholder="Local do material" disabled>
+            <div id="infoCautela" style="display:none; margin-bottom:10px; padding:10px; background:#e7f3ff; border-radius:4px; font-size:13px;">
+                <p><strong>Quantidade total:</strong> <span id="quantidadeTotalInfo">-</span></p>
+                <p><strong>Quantidade cautelada:</strong> <span id="quantidadeCauteladaInfo">0</span></p>
+                <p><strong>Quantidade disponível:</strong> <span id="quantidadeDisponiavelInfo">-</span></p>
+            </div>
+            <input type="number" id="quantidadeCautela" placeholder="Quantidade a cautelar *" min="1" value="1">
+            <input type="text" id="nomeMilitarCautela" placeholder="Nome do militar *">
+            
+            <select id="companhiaMilitarCautela">
+                <option value="">Selecione a companhia *</option>
+            </select>
+
+            <input type="date" id="dataCautela">
+            <input list="cauteladores" id="quemCautelou" placeholder="Quem cautelou *">
+            <datalist id="cauteladores"></datalist>
+            <textarea id="obsCautela" rows="3" placeholder="Observações (opcional)"></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button id="salvarCautela">Salvar Cautela</button>
+            <button id="fecharCautela">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL DESCAUTELA
+========================= -->
+<div id="modalDescautela" class="modal">
+    <div class="modal-box">
+        <h2>Descautelar material</h2>
+        <div id="descautelaNomeMaterial" style="margin-bottom:12px; font-weight:600; line-height: 1.4;"></div>
+        
+        <label for="selecionarCautelaAtiva" style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">Selecione quem está devolvendo *</label>
+        <select id="selecionarCautelaAtiva">
+            <option value="">Selecione quem está devolvendo *</option>
+        </select>
+
+        <label for="quantidadeDescautela" style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">Quantidade a devolver *</label>
+        <input type="number" id="quantidadeDescautela" placeholder="Quantidade a devolver *" min="1" value="1">
+        
+        <label for="dataDescautela" style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">Data de devolução</label>
+        <input type="date" id="dataDescautela">
+        
+        <input type="text" id="quemDescautelou" placeholder="Quem descautelou *">
+        <textarea id="obsDescautela" rows="3" placeholder="Observações de devolução (opcional)"></textarea>
+        <div class="modal-actions">
+            <button id="salvarDescautela">Salvar Descautela</button>
+            <button id="fecharDescautela">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- =========================
+     MODAL HISTÓRICO
+========================= -->
+<div id="modalHistorico" class="modal">
+    <div class="modal-box modal-historico">
+        <h2 id="tituloHistorico">Histórico de Cautelas</h2>
+        <div id="conteudoHistorico" class="lista-historico"></div>
+        <div class="modal-actions">
+            <button id="fecharHistorico">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalDetalhes" class="modal">
+    <div class="modal-box modal-detalhes">
+        <h2 id="tituloDetalhes">Detalhes do material</h2>
+        <div id="conteudoDetalhes" class="conteudo-detalhes"></div>
+        <div class="modal-actions">
+            <button id="btnEditarDetalhes">Editar</button>
+            <button id="btnExcluirDetalhes">Excluir</button>
+            <button id="btnHistoricoDetalhes">Cautela</button>
+            <button id="btnDescautelarDetalhes" style="display:none;">Descautelar</button>
+            <button id="btnManutencaoDetalhes">Manutenção</button>
+        </div>
+        <div class="modal-actions">
+            <button id="fecharDetalhes">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalManutencao" class="modal">
+    <div class="modal-box modal-detalhes">
+        <h2>Manutenção</h2>
+
+        <div class="tabs" style="margin-bottom:10px;">
+            <button id="tabHistoricoManut" class="tab active">Histórico de manutenção</button>
+            <button id="tabNovaManut" class="tab">Nova manutenção</button>
+        </div>
+
+        <div id="conteudoHistoricoManut" class="lista-historico" style="display:block; max-height:320px; overflow-y:auto; margin-bottom:10px;">
+            <!-- Histórico de manutenções será preenchido via JS -->
+        </div>
+
+        <div id="conteudoNovaManut" style="display:none;">
+            <input type="date" id="dataManutencao">
+            <input type="text" id="quemFezManutencao" placeholder="Quem fez *">
+            <textarea id="descricaoManutencao" rows="4" placeholder="O que foi feito *"></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button id="salvarManutencao">Salvar</button>
+            <button id="fecharManutencao">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalFoto" class="modal">
+    <div class="modal-box modal-foto">
+        <button id="editarFotoModal" class="foto-editar-modal" title="Editar foto">✎</button>
+        <img id="imagemAmpliada" src="" alt="Foto do material">
+        <button id="fecharFoto">Fechar</button>
+    </div>
+</div>
+
+<footer>
+    <div>Sistema de Cautela NPOR © 2026</div>
+    <div>Por: Cb <strong>Daniel</strong> Martins Teixeira</div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

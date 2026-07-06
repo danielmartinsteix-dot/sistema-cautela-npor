@@ -1,0 +1,3 @@
+backend/node_modules
+backend/chave-firebase.json
+backend/.env
