@@ -1126,13 +1126,13 @@ function abrirManutencao(id) {
     quemFezManutencao.value = material.ultimaManutencao?.responsavel || "";
     descricaoManutencao.value = material.ultimaManutencao?.descricao || "";
 
-    if (tabHistoricoManut && tabNovaCaut && conteudoHistoricoManut && conteudoNovaCaut) {
-        tabHistoricoManut.classList.add("active");
-        tabNovaCaut.classList.remove("active");
-        conteudoHistoricoManut.style.display = "block";
-        conteudoNovaCaut.style.display = "none";
-        renderizarHistoricoManutencao(material);
-    }
+  if (tabHistoricoManut && tabNovaManut && conteudoHistoricoManut && conteudoNovaManut) {
+    tabHistoricoManut.classList.add("active");
+    tabNovaManut.classList.remove("active");
+    conteudoHistoricoManut.style.display = "block";
+    conteudoNovaManut.style.display = "none";
+    renderizarHistoricoManutencao(material);
+}
 
     modalManutencao.style.display = "flex";
 }
